@@ -1,0 +1,13 @@
+### Test
+GET localhost:8000/api/accounts/users/user
+Content-Type: application/json
+X-User-Id: user
+
+### 로그인
+POST localhost:8000/api/accounts/login
+Content-Type: application/json
+
+{
+  "userId": "user",
+  "password": "new123"
+}

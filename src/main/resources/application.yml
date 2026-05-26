@@ -1,3 +1,27 @@
 spring:
   application:
-    name: minidooray-gateway
+    name: gateway
+  session:
+    store-type: redis
+  data:
+    redis:
+      host: 10.116.64.14
+      port: 6379
+      password: "*N2vya7H@muDTwdNMR!"
+      database: 22
+
+
+server:
+  port: 8000
+
+logging:
+  level:
+    root: info
+    org.springframework.security: debug
+    org.springframework.session: debug
+
+external:
+  account-api:
+    uri: http://localhost:8081/api/accounts
+  task-api:
+    uri: http://localhost:8082/api/tasks
