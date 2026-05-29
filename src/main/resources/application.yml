@@ -17,11 +17,13 @@ server:
 logging:
   level:
     root: info
-    org.springframework.security: debug
-    org.springframework.session: debug
 
 external:
+  auth-api:
+    uri: http://localhost:8083/api/auth
   account-api:
     uri: http://localhost:8081/api/accounts
   task-api:
     uri: http://localhost:8082/api/tasks
+jwt:
+  secret-key: "l7lD/bDeX1yqkdIWdecWa0QvHDLBA0LDAwwFKXYABJkvOSBRCv4Gotox6sATdG7pjoFV563J+CZ9lG54ktkPig=="

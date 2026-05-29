@@ -12,6 +12,9 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 @Configuration
 public class RouterConfig {
 
+    @Value("${external.auth-api.uri}")
+    private String authApiUrl;
+
     @Value("${external.task-api.uri}")
     private String taskApiUrl;
 
@@ -21,28 +24,30 @@ public class RouterConfig {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                // 로그인 라우팅 -> 로그인 인증없이 접근 허용
-                .route("account-login",
-                        p-> p.path("/api/accounts/login")
-                                .and()
-                                .method(HttpMethod.POST)
-                                .uri(accountApiUrl))
+
+                // auth 라우팅 -> 모든 /api/auth/** 경로에 대해 인증 없이 authApiUrl로 라우팅
+                .route("auth-api",
+                        p-> p.path("/api/auth/**")
+                                .uri(authApiUrl))
+
+                // task 라우팅 -> 모든 /api/tasks/** 경로에 대해 useridHeaderFilter를 적용하여 X-User-Id 헤더에 사용자 ID를 추가한 후 taskApiUrl로 라우팅
+                .route("task-api",
+                        p->p.path("/api/tasks/**")
+                                .filters(f->f.filter(useridHeaderFilter()))
+                                .uri(taskApiUrl))
+
                 // 회원가입 라우팅 -> 회원가입 인증없이 접근 허용
                 .route("account-register",
                         p->p.path("/api/accounts/users")
                                 .and()
                                 .method(HttpMethod.POST)
                                 .uri(accountApiUrl))
-                // task 라우팅 -> 모든 /api/tasks/** 경로에 대해 useridHeaderFilter를 적용하여 X-User-Id 헤더에 사용자 ID를 추가한 후 taskApiUrl로 라우팅
-                .route("task-api",
-                        p->p.path("/api/tasks/**")
-                                .filters(f->f.filter(useridHeaderFilter()))
-                                .uri(taskApiUrl))
                 // account 라우팅 -> 모든 /api/accounts/** 경로에 대해 useridHeaderFilter를 적용하여 X-User-Id 헤더에 사용자 ID를 추가한 후 accountApiUrl로 라우팅
                 .route("account-api",
                         p->p.path("/api/accounts/**")
                                 .filters(f->f.filter(useridHeaderFilter()))
                                 .uri(accountApiUrl))
+
                 .build();
     }
 
