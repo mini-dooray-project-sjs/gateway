@@ -4,7 +4,7 @@ Content-Type: application/json
 X-User-Id: user
 
 ### 로그인
-POST localhost:8000/api/accounts/login
+POST localhost:8000/api/auth/login
 Content-Type: application/json
 
 {
